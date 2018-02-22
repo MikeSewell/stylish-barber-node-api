@@ -27,17 +27,26 @@ router.get('/v1/gallery', async (req, res)=>{
         res.json(results);
      });
   })
+  router.post('/v1/day', async (req, res)=>{
+    console.log('body start',req.body.start);
+    console.log('body end',req.body.end);
+
+
+    g.init('getDay', cb1 = 3, cb2 = 1, req.body.start, req.body.end, cb5 = 1, async (err, results) => {
+      const availableAppt = await results.items.filter(item => item.transparency === 'transparent');
+      res.json(availableAppt);
+    });
+  })
   // make appointment
   router.post('/v1/event/make', (req, res)=>{
-    g.init("update", '66h8ni26l2logsobrk2fg5m0mb_20180216T160000Z', 'name and service', '2018-02-16T11:00:00-05:00', '2018-02-16T12:00:00-05:00','opaque',(err, results)=>{
+    g.init("update", req.body.id, req.body.name, req.body.start, req.body.end,'opaque',(err, results)=>{
       console.log(err);
-      
       res.json(results);
     })
   })
   // cancel appointment
   router.post('/v1/event/cancel',(req,res)=>{
-    g.init("cancel", '66h8ni26l2logsobrk2fg5m0mb_20180216T160000Z', 'name and service', '2018-02-16T11:00:00-05:00', '2018-02-16T12:00:00-05:00', 'transparent', (err, results) => {
+    g.init("cancel", req.body.id, req.body.name, req.body.start, '2018-02-16T12:00:00-05:00', 'transparent', (err, results) => {
       console.log(err);
 
       res.json(results);
